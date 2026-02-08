@@ -16,16 +16,18 @@ public class Trading {
     static int argmaxTail(int[] prices, int i) {
         // TODO 2: Implement this method according to its specifications. Use a `while` loop
         //  documented with the invariant you visualized in part 1.
-        int max = prices[i + 1];
-        int pricesLength = prices.length;
+        int maxIndex = i + 1;
         int j = i+2;
+        /*
+        Loop invariant: prices(i,j) <= prices[maxIndex], where max index is in (i,j).
+         */
         while (j < prices.length){
-            if (max < prices[j]){
-                max = prices[j];
+            if (prices[maxIndex] < prices[j]){
+                maxIndex= j;
             }
             j++;
         }
-        return max;
+        return maxIndex;
     }
 
     /**
@@ -44,11 +46,12 @@ public class Trading {
          */
         int i = 0;
         int maxProfits = 0;
-        while (i < prices.length) {
-            assert optimalProfit1Invariant(prices, optProfit, i);
-            if (maxProfits < (argmaxTail(prices, i) - prices[i])){
-                maxProfits = argmaxTail(prices, i) - prices[i];
+        while (i < prices.length - 1) {
+            //assert optimalProfit1Invariant(prices, optProfit, i);
+            if (maxProfits < (prices[argmaxTail(prices, i)] - prices[i])){
+                maxProfits = prices[argmaxTail(prices, i)] - prices[i];
             }
+            i++;
         }
         return maxProfits;
     }
@@ -69,24 +72,24 @@ public class Trading {
          * Loop invariant: `optProfit` is the maximum profit that can be achieved when the share
          * is purchased at a time in `(j..]`.
          */
-        int j = prices.length - 1;
-        int buyPoint = j;
-        int sellPoint = j;
+        int j = prices.length - 2;
         int maxProfit = 0;
+        int max = prices[prices.length
+                - 1]; //Note that this is just the value of the 'max' that matters not always real
+        int min =  prices[prices.length - 1]; //same goes for min
         while (j >= 0) {
-            assert optimalProfit2Invariant(prices, optProfit, j);
-            if (prices[j] <= prices[buyPoint]){
-                buyPoint = prices[j];
-                maxProfit = prices[buyPoint] - prices[sellPoint];
-            }
-            if (prices[j]> prices[sellPoint]){
-                maxProfit = prices[buyPoint] - prices[sellPoint];
-            }
-            j--;
+            //assert optimalProfit2Invariant(prices, optProfit, j);
+            if (prices[j]  < prices[j+1]){
 
+            }
 
         }
-        throw new UnsupportedOperationException();
+        if (maxProfit < 0){
+            maxProfit = 0;
+        }
+        return maxProfit;
     }
+
+
 
 }
